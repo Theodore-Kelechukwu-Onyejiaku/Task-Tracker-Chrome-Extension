@@ -17,3 +17,6 @@ A Chrome extension built using StrapJs, ReactJs and Tailwind CSS
 5. Our Chrome extension badge should show the number of completed tasks.
 
 PS: If you love it, please leave a star ⭐️
+
+## Demo
+https://youtu.be/gwTy6at6N-U
