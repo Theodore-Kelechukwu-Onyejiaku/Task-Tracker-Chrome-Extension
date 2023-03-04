@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { BiEditAlt } from 'react-icons/bi';
 import { BsCheck2Square } from 'react-icons/bs';
 import { RxTrash } from 'react-icons/rx';
@@ -19,7 +19,8 @@ export default function Task({
   dateCreated = moment(dateCreated).calendar();
 
   // get the time in string of minutes and seconds
-  const getTimeString = () => {
+  const getTimeString = useCallback(() => {
+    console.log('get time string do run oo');
     const mins = Math.floor((parseInt(task?.attributes?.realTime) - Date.now()) / 60000);
     const seconds = Math.round((parseInt(task?.attributes?.realTime) - Date.now()) / 1000) % 60;
     if (mins <= 0 && seconds <= 0) {
@@ -29,7 +30,7 @@ export default function Task({
     let timeString = 'starting counter';
     timeString = `${mins} min ${seconds} secs`;
     setTimeString(timeString);
-  };
+  }, [task]);
 
   // delete task
   const handleDelete = async () => {
@@ -46,7 +47,7 @@ export default function Task({
   // mark task as completed
   const markCompleted = async () => {
     try {
-      const res = await axios.put(`${serverUrl}/api/tasks/${task?.id}`, {
+      await axios.put(`${serverUrl}/api/tasks/${task?.id}`, {
         data: {
           completed: true,
           realTime: 0,
@@ -66,13 +67,14 @@ export default function Task({
   };
 
   useEffect(() => {
+    console.log('helllooo');
     // set timer to run every second
     const timer = setInterval(() => {
       setCount((count) => count + 1);
       getTimeString();
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [getTimeString]);
   return (
     <div className={`${task?.attributes?.completed ? ' bg-green-500 text-white ' : ' bg-white '} scale-in-center p-8 hover:shadow-xl rounded-3xl shadow-md my-5 relative`}>
       <div className="flex justify-center w-full">
